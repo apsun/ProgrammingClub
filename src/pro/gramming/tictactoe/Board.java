@@ -84,7 +84,9 @@ public class Board {
     private boolean checkRowForResult(BoardPiece piece, int col) {
         int size = getBoardSize();
         for (int checkX = 0; checkX < size; ++checkX) {
-            if (getPieceAtPosition(checkX, col) != piece) return false;
+            if (getPieceAtPosition(checkX, col) != piece) {
+                return false;
+            }
         }
         return true;
     }
@@ -92,7 +94,9 @@ public class Board {
     private boolean checkColumnForResult(BoardPiece piece, int row) {
         int size = getBoardSize();
         for (int checkY = 0; checkY < size; ++checkY) {
-            if (getPieceAtPosition(row, checkY) != piece) return false;
+            if (getPieceAtPosition(row, checkY) != piece) {
+                return false;
+            }
         }
         return true;
     }
@@ -101,16 +105,20 @@ public class Board {
         if (row != col) return false;
         int size = getBoardSize();
         for (int checkXY = 0; checkXY < size; ++checkXY) {
-            if (getPieceAtPosition(checkXY, checkXY) != piece) return false;
+            if (getPieceAtPosition(checkXY, checkXY) != piece) {
+                return false;
+            }
         }
         return true;
     }
 
     private boolean checkUpDiagonalForResult(BoardPiece piece, int row, int col) {
         int size = getBoardSize();
-        if (row != size - col - 1) return false;
+        if (row != size - 1 - col) return false;
         for (int checkXY = 0; checkXY < size; ++checkXY) {
-            if (getPieceAtPosition(checkXY, size - col - 1 - checkXY) != piece) return false;
+            if (getPieceAtPosition(checkXY, size - 1 - checkXY) != piece) {
+                return false;
+            }
         }
         return true;
     }
