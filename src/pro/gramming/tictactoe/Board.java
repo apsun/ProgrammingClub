@@ -49,6 +49,11 @@ public class Board {
         return _currPlayer;
     }
 
+    public MoveResult putPieceAtPosition(int row, int col) {
+        BoardPosition pos = new BoardPosition(row, col);
+        return putPieceAtPosition(pos);
+    }
+
     public MoveResult putPieceAtPosition(BoardPosition position) {
         if (isGameOver()) {
             throw new IllegalStateException("Game is already over, cannot submit new moves");

@@ -4,8 +4,17 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Main {
+public class GameRunner {
     private static final Pattern LOCATION_PATTERN = Pattern.compile("^\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*$");
+
+    private Board _board;
+    private int _boardSize;
+    private Scanner _scanner;
+
+    public GameRunner(int boardSize) {
+        _boardSize = boardSize;
+        _scanner = new Scanner(System.in);
+    }
 
     private static String getMoveResultString(MoveResult res) {
         switch (res) {
@@ -37,10 +46,14 @@ public class Main {
         }
     }
 
-    private static boolean promptRetry(Scanner scanner) {
+    public void initializeBoard() {
+        _board = new Board(_boardSize);
+    }
+
+    public boolean promptRetry() {
         while (true) {
             System.out.print("Play again? (y/n): ");
-            String input = scanner.nextLine();
+            String input = _scanner.nextLine();
             if ("y".equalsIgnoreCase(input)) {
                 return true;
             } else if ("n".equalsIgnoreCase(input)) {
@@ -51,27 +64,30 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
-        Board board;
-        Scanner scanner = new Scanner(System.in);
-        boolean again;
-        do {
-        	board = new Board(3);
-	        while (!board.isGameOver()) {
-	            System.out.print("Enter " + board.getCurrentPlayer() + "'s location (row, column): ");
-	            BoardPosition pos = parsePosition(scanner.nextLine());
-	            if (pos != null) {
-	                MoveResult result = board.putPieceAtPosition(pos);
-	                String resultStr = getMoveResultString(result);
-	                System.out.println(board);
-	                System.out.println(resultStr);
-	            } else {
-	                System.out.println("Invalid coordinate format!");
-	            }
-	        }
-	        again = promptRetry(scanner);
-        } while (again);
-        System.out.println("Bye!");
-        scanner.close();
+    public BoardPosition promptMove() {
+        while (true) {
+            System.out.print("Enter " + _board.getCurrentPlayer() + "'s location (row, column): ");
+            BoardPosition pos = parsePosition(_scanner.nextLine());
+            if (pos == null) {
+                System.out.println("Invalid coordinate format!");
+            } else {
+                return pos;
+            }
+        }
+    }
+
+    public boolean isGameOver() {
+        return _board.isGameOver();
+    }
+
+    public void performMove(BoardPosition pos) {
+        MoveResult result = _board.putPieceAtPosition(pos);
+        String resultStr = getMoveResultString(result);
+        System.out.println(_board);
+        System.out.println(resultStr);
+    }
+
+    public void endGame() {
+        System.out.println("Bye~");
     }
 }
