@@ -42,7 +42,7 @@ public class GuessGameMain {
     }
 
     private static int generateNumber(int lowerBound, int upperBound) {
-        int range = upperBound - lowerBound;
+        int range = upperBound - lowerBound + 1;
         int delta = (int)(Math.random() * range);
         return lowerBound + delta;
     }
