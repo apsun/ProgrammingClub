@@ -2,7 +2,6 @@ package pro.gramming.tictactoe;
 
 import pro.gramming.boardgame.BoardPrinter;
 import pro.gramming.tictactoe.ai.TicTacToeRandomAI;
-import pro.gramming.tictactoe.ai.TicTacToeSequentialAI;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -17,37 +16,43 @@ public class TicTacToeMain {
     }
 
     public void initializeGame() {
-        _game = new TicTacToeGame(
-            // new TicTacToeHumanPlayer('O'),
-            // new TicTacToeHumanPlayer('X')
-            new TicTacToeRandomAI('X'),
-            new TicTacToeSequentialAI('O')
+        _game = new TicTacToeGame(3,        // Board size
+            new TicTacToeHumanPlayer('O'),  // Player 1
+            new TicTacToeRandomAI('X')      // Player 2
         );
         _pauseOnUpdate = true;
     }
 
-    public void update() {
+    private void printBoardState() {
         System.out.println("Current board state:");
         System.out.println(BoardPrinter.toString(_game.getBoard()));
-        switch (_game.update()) {
-            case GAME_ENDED:
-                System.out.println("Current board state:");
-                System.out.println(BoardPrinter.toString(_game.getBoard()));
-                System.out.println("Game over! Winning player: " + _game.getWinningPlayer().getSymbol());
-                break;
-            case GAME_TIED:
-                System.out.println("Current board state:");
-                System.out.println(BoardPrinter.toString(_game.getBoard()));
-                System.out.println("Game tied!");
-                break;
-        }
+    }
+
+    private void pause() {
         if (_pauseOnUpdate) {
-            System.out.println("Press ENTER to continue...");
+            System.out.print("Press ENTER to continue...");
             try {
                 System.in.read();
             } catch (IOException e) {
-                e.printStackTrace();
+                // Ignore
             }
+        }
+    }
+
+    public void update() {
+        printBoardState();
+        switch (_game.update()) {
+            case GAME_ENDED:
+                printBoardState();
+                System.out.println("Game over! Winning player: " + _game.getWinningPlayer().getSymbol());
+                break;
+            case GAME_TIED:
+                printBoardState();
+                System.out.println("Game tied!");
+                break;
+            default:
+                pause();
+                break;
         }
     }
 
@@ -69,10 +74,6 @@ public class TicTacToeMain {
         }
     }
 
-    public void onEndGame() {
-        System.out.println("Bye~");
-    }
-
     public static void main(String[] args) {
         TicTacToeMain main = new TicTacToeMain();
         do {
@@ -81,6 +82,5 @@ public class TicTacToeMain {
                 main.update();
             }
         } while (main.promptRetry());
-        main.onEndGame();
     }
 }

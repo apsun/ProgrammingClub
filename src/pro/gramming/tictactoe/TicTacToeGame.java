@@ -8,9 +8,9 @@ public class TicTacToeGame {
     private boolean _isGameOver;
     private TicTacToePlayer _winningPlayer;
 
-    public TicTacToeGame(TicTacToePlayer player1, TicTacToePlayer player2) {
-        _board = new Board<TicTacToePiece>(6);
-        _players = new CircularQueue<TicTacToePlayer>(player1, player2);
+    public TicTacToeGame(int boardSize, TicTacToePlayer... players) {
+        _board = new Board<TicTacToePiece>(boardSize);
+        _players = new CircularQueue<TicTacToePlayer>(players);
         _isGameOver = false;
         _winningPlayer = null;
     }
