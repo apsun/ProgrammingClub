@@ -1,7 +1,7 @@
-package pro.gramming.tictactoe;
+package pro.gramming.boardgame;
 
 public class BoardPosition {
-    private int _row, _col;
+    private final int _row, _col;
 
     public BoardPosition(int row, int col) {
         _row = row;
@@ -19,5 +19,12 @@ public class BoardPosition {
     @Override
     public String toString() {
         return String.format("(%d,%d)", getRow(), getCol());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BoardPosition)) return false;
+        BoardPosition otherPos = (BoardPosition)o;
+        return getRow() == otherPos.getRow() && getCol() == otherPos.getCol();
     }
 }

@@ -2,7 +2,7 @@ package pro.gramming.guessgame;
 
 import java.util.Scanner;
 
-public class GuessGameMain {
+public class ReverseGuessGameMain {
     private static int promptLowerBound(Scanner scanner) {
         return promptInteger("Enter the lower bound: ", scanner);
     }
@@ -14,17 +14,6 @@ public class GuessGameMain {
                 return input;
             } else {
                 System.out.println("The upper bound must be greater than the lower bound!");
-            }
-        }
-    }
-
-    private static int promptGuess(Scanner scanner, int lowerBound, int upperBound) {
-        while (true) {
-            int input = promptInteger("Guess a number (" + lowerBound + "~" + upperBound + "): ", scanner);
-            if (input >= lowerBound && input <= upperBound) {
-                return input;
-            } else {
-                System.out.println("Enter a number between the lower and upper bounds!");
             }
         }
     }
@@ -41,12 +30,6 @@ public class GuessGameMain {
         }
     }
 
-    private static int generateNumber(int lowerBound, int upperBound) {
-        int range = upperBound - lowerBound + 1;
-        int delta = (int)(Math.random() * range);
-        return lowerBound + delta;
-    }
-
     private static boolean promptRetry(Scanner scanner) {
         while (true) {
             System.out.print("Play again? (y/n): ");
@@ -61,33 +44,54 @@ public class GuessGameMain {
         }
     }
 
+    private static int promptInequality(Scanner scanner, int aiGuess) {
+        System.out.println("The AI guesses: " + aiGuess);
+        while (true) {
+            System.out.print("Is this number [>], [<], or [=]?: ");
+            String cmp = scanner.nextLine();
+            if (">".equals(cmp)) {
+                return 1;
+            } else if ("<".equals(cmp)) {
+                return -1;
+            } else if ("=".equals(cmp)) {
+                return 0;
+            } else {
+                System.out.println("Invalid input, enter either '<', '>', or '='!");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         do {
             int lowerBound = promptLowerBound(scanner);
             int upperBound = promptUpperBound(scanner, lowerBound);
-            int randomNum = generateNumber(lowerBound, upperBound);
             int guessCount = 0;
+            boolean done = false;
 
-            while (true) {
-                int guess = promptGuess(scanner, lowerBound, upperBound);
+            while (lowerBound <= upperBound) {
+                int aiGuess = (lowerBound + upperBound) / 2;
                 ++guessCount;
-                if (guess < randomNum) {
-                    System.out.println("Too low!");
-                    lowerBound = guess + 1;
-                } else if (guess > randomNum) {
-                    System.out.println("Too high!");
-                    upperBound = guess - 1;
-                } else {
+                int cmp = promptInequality(scanner, aiGuess);
+                if (cmp < 0) {
+                    lowerBound = aiGuess + 1;
+                } else if (cmp > 0) {
+                    upperBound = aiGuess - 1;
+                } else if (cmp == 0) {
                     if (guessCount == 1) {
-                        System.out.println("Yay! You got it right on your first try!");
+                        System.out.println("Well, that was fast. Choose a harder number!");
                     } else {
-                        System.out.println("Yay! You got it right in " + guessCount + " tries!");
+                        System.out.println("Yay! The AI guessed your number in " + guessCount + " tries.");
                     }
+                    done = true;
                     break;
                 }
             }
+
+            if (!done) {
+                System.out.println("You cheater! Stop changing your number! >:-(");
+            }
         } while (promptRetry(scanner));
-        System.out.println("You suck~");
+        System.out.println("Bye~");
     }
 }
